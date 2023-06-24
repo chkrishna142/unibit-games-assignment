@@ -2,27 +2,28 @@ import java.util.*;
 
  class Main {
     public static int[][] findPairs(int[] nums, int target) {
-        
         HashMap<Integer, Integer> map = new HashMap<>();
         List<int[]> pairs = new ArrayList<>();
 
         for (int num : nums) {
             int restTarget = target - num;
-            
-            
-            if (map.containsKey(restTarget)) {
-                int[] pair = {num, restTarget};
-                pairs.add(pair);
+
+            if (map.containsKey(restTarget) && map.get(restTarget) > 0) {
+                int[] pair = { num, restTarget };
+                pairs.add(pair);  
+                
+                map.put(restTarget, map.get(restTarget) - 1);
+               
             }
-            map.put(num, restTarget);
+           
+            map.put(num, map.getOrDefault(num, 0) + 1);
+           
+            
         }
 
-        
         int[][] result = new int[pairs.size()][2];
         for (int i = 0; i < pairs.size(); i++) {
             result[i] = pairs.get(i);
-           
-            
         }
 
         return result;
@@ -47,21 +48,26 @@ import java.util.*;
 
         return mergedArray;
     }
+    
+    public static int[][] findSecondCombination(int[] nums, int target) {
+        int doubledTarget = target * 2;
+        return findPairs(nums, doubledTarget);
+    }
 
     public static void main(String[] args) {
-        int[] nums = {1, 3, 2, 2, -4, -6, 10, 8};
+        int[] nums = {1, 3, 2, 2, -4, -6, 2, 8};
         int target = 4;
-
-        int[][] pairs = findPairs(nums, target);
-        System.out.println("First Combination For " + target + ":");
        
-        for (int[] pair : pairs) {
         
-            System.out.println(Arrays.toString(pair));
-        }
+        int[][] result = findPairs(nums, target);
+        System.out.println("First Combination For \"" + target + "\" : " + Arrays.deepToString(result));
 
-        int[] mergedArray = mergeAndSort(pairs);
-        System.out.println("Merge Into a single Array:");
-        System.out.println(Arrays.toString(mergedArray));
+    
+        
+           int[] mergedArray = mergeAndSort(result);
+        System.out.println("Merge Into a single Array : " + Arrays.toString(mergedArray));
+        
+         int[][] secondResult = findSecondCombination(nums, target);
+        System.out.println("Second Combination For \"" + (target * 2) + "\" : " + Arrays.deepToString(secondResult));
     }
 }
